@@ -50,12 +50,12 @@ public class Main {
         long finishTimeBruteForce = System.nanoTime();
 
         System.out.print("");
-        System.out.println("======================================================");
+        System.out.println("===============[Brute Force Solution]=======================");
         System.out.println("Brute force algorithm results:");
         System.out.println("Two closest pairs: (" + BruteForcePair[0].getX() + "," + BruteForcePair[0].getY() + ") & " + "(" + BruteForcePair[1].getX() + "," + BruteForcePair[1].getY() + ")");
         System.out.println("Distance between the two points was: " + CalculateDistance(BruteForcePair[0], BruteForcePair[1]));
         System.out.println("Brute force method took a total of: " + (finishTimeBruteForce-startTimeBruteForce) + " nanoseconds");
-        System.out.println("======================================================");
+        System.out.println("============================================================");
         System.out.print("");
 
         //Sort input by x coordinate via mergesort - has a time complexity of O(nlogn)
@@ -66,12 +66,40 @@ public class Main {
         Point[] EfficientAlgorithmPair = EfficientClosestPair(sortedList);
         long finishTimeEfficientAlgorithm = System.nanoTime();
 
-        System.out.println("======================================================");
+        System.out.println("==============[Efficient Solution]==========================");
         System.out.println("Efficient closest pair of points algorithm result:");
         System.out.println("Two closest pairs: (" + EfficientAlgorithmPair[0].getX() + "," + EfficientAlgorithmPair[0].getY() + ") & " + "(" + EfficientAlgorithmPair[1].getX() + "," + EfficientAlgorithmPair[1].getY() + ")");
         System.out.println("Distance between the two points was: " + CalculateDistance(EfficientAlgorithmPair[0], EfficientAlgorithmPair[1]));
         System.out.println("Efficient closest pair of points algorithm method took a total of: " + (finishTimeEfficientAlgorithm-startTimeEfficientAlgorithm) + " nanoseconds");
-        System.out.println("======================================================");
+        System.out.println("============================================================");
+        System.out.print("");
+
+        //Now run each method ten times to get a good average comparison for both
+        System.out.println("===================[Statistics]=============================");
+
+        long bruteForceSum = 0;
+        for (int i = 0; i < 10; i++) {
+            long localTimeStart = System.nanoTime();
+            BruteForceClosestPair(points);
+            long localFinishTime = System.nanoTime();
+            bruteForceSum += (localFinishTime-localTimeStart);
+        }
+        long bruteForceAverage = bruteForceSum/10;
+
+        long efficientSum = 0;
+        for (int i = 0; i < 10; i++) {
+            long localTimeStart = System.nanoTime();
+            EfficientClosestPair(points);
+            long localFinishTime = System.nanoTime();
+            efficientSum += (localFinishTime-localTimeStart);
+        }
+        long efficientAverage = efficientSum/10;
+
+        System.out.println("Out of ten iterations of each method, the following are the average run times:");
+        System.out.println("Average Brute Force Runtime: " + bruteForceAverage + " milliseconds.");
+        System.out.println("Average Efficient Implementation Runtime: " + efficientAverage + " milliseconds.");
+        System.out.println("On average the efficient solution was approximately " + (bruteForceAverage/efficientAverage)*100 + "% better then the brute force alternative");
+        System.out.println("============================================================");
     }
 
     //Purpose: This method takes in an arraylist of points and then runs an efficient closest pair algorithm to get the closest pair out of a set of points
