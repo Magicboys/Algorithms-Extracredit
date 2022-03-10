@@ -2,7 +2,6 @@
 //Algorithms Extracredit Assignment
 //3-10-2022
 
-
 import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -45,18 +44,7 @@ public class Main {
             }
         }
 
-        //Sort input by x coordinate via mergesort
-        ArrayList<Point> sortedList = MergeSort(points, true);
-
-        /*
-        //Debug for mergesort
-        for(int i = 0; i < sortedList.size(); i++) {
-            Point temp = sortedList.get(i);
-            System.out.println(i + " X:" + temp.getX() + " Y:" + temp.getY());
-        }*/
-
-        //TODO: pass the list of points into the find closest point algorithm method
-
+        //Implements the brute force method for finding the closet pair
         long startTimeBruteForce = System.nanoTime();
         Point[] BruteForcePair = BruteForceClosestPair(points);
         long finishTimeBruteForce = System.nanoTime();
@@ -66,13 +54,98 @@ public class Main {
         System.out.println("Brute force method took a total of: " + (finishTimeBruteForce-startTimeBruteForce) + " nanoseconds");
 
 
-        //TODO: time brute force and efficient method and output the comparison
+        //TODO: pass the list of points into the find closest point algorithm method
+        //Sort input by x coordinate via mergesort - has a time complexity of O(nlogn)
+        ArrayList<Point> sortedList = MergeSort(points, true);
+
+        //Finds the closest pair via the closet pair divide and conquer algorithm implementation - has a time complexity of O(nlogn)
+        long startTimeEfficentAlgorithm = System.nanoTime();
+        Point[] EfficentAlgorithmPair = EfficientClosestPair(sortedList);
+        long finishTimeEfficentAlgorithm = System.nanoTime();
+
+        System.out.println("Efficient closest pair of points algorithm result:");
+        System.out.println("(" + EfficentAlgorithmPair[0].getX() + "," + EfficentAlgorithmPair[0].getY() + ") & " + "(" + EfficentAlgorithmPair[1].getX() + "," + EfficentAlgorithmPair[1].getY() + ")");
+        System.out.println("Efficient closest pair of points algorithm method took a total of: " + (finishTimeEfficentAlgorithm-startTimeEfficentAlgorithm) + " nanoseconds");
     }
 
     //Purpose: This method takes in an arraylist of points and then runs an efficient closest pair algorithm to get the closest pair out of a set of points
     //Returns: provides the two points which are the closest to each other out of the whole set
     private static Point[] EfficientClosestPair(ArrayList<Point> points) {
-        Point[] result = null;
+        Point[] result = new Point[2];
+
+        //Base case
+        if (points.size() <= 3) {
+            /*
+            System.out.println("debug");
+            for(int i = 0; i < points.size(); i++) {
+                System.out.println(points.get(i).toString());
+            }*/
+            result[0] = points.get(0);
+            result[1] = points.get(1);
+            return result;
+        }
+
+        //We can just divide by the midpoint since the points are already presorted by x cordinate
+        int midIndex = points.size()/2;
+
+        ArrayList<Point> leftHalf = new ArrayList<Point>();
+        for(int i = 0; i < midIndex; i++) {
+            leftHalf.add(points.get(i));
+        }
+
+        ArrayList<Point> rightHalf = new ArrayList<Point>();
+        for(int i = midIndex; i < points.size(); i++) {
+            rightHalf.add(points.get(i));
+        }
+
+        Point[] closestPairLeftHalf = EfficientClosestPair(leftHalf);
+        Point[] closestPairRightHalf = EfficientClosestPair(rightHalf);
+
+        //Calculate the minimum distance between the two closest points on each half
+        double min = -1;
+        if (CalculateDistance(closestPairLeftHalf[0],closestPairLeftHalf[1]) < CalculateDistance(closestPairRightHalf[0], closestPairRightHalf[1])) {
+            min = CalculateDistance(closestPairLeftHalf[0],closestPairLeftHalf[1]);
+        } else {
+            min = CalculateDistance(closestPairRightHalf[0], closestPairRightHalf[1]);
+        }
+
+        //Calculate the region around the line of separation
+        double lineOfSeparation = points.get(midIndex).getX();
+        double separationLeftBound = lineOfSeparation - min;
+        double separationRightBound = lineOfSeparation + min;
+
+        //Delete points in the list not within the bound
+        for (int i = 0; i < points.size(); i++) {
+            if (!((points.get(i).getX() > separationLeftBound) && (points.get(i).getX() < separationRightBound))) {
+                points.remove(i);
+            }
+        }
+
+        //Now sort remaining points by y value
+        ArrayList<Point> yValueSortedPoints = MergeSort(points, false);
+
+        //Scan closest 11 points to find the min and check if the min across the line of separation
+        double localMin = 1000000;
+        for (int i = 0; i < yValueSortedPoints.size(); i++) {
+
+            //Check if the upper bounds hits the last point
+            //Since we begin by checking the closest 11 positions from the very bottom, we only need to check the closest 11 positions above the current point
+            int upperBounds = -1;
+            if(i+11 < yValueSortedPoints.size()) {
+                upperBounds = i+11;
+            } else {
+                upperBounds = yValueSortedPoints.size();
+            }
+
+            for (int j = i+1; j < upperBounds; j++) {
+                double localDistance = CalculateDistance(yValueSortedPoints.get(i), yValueSortedPoints.get(j));
+                if (localDistance < localMin) {
+                    localMin = localDistance;
+                    result[0] = yValueSortedPoints.get(i);
+                    result[1] = yValueSortedPoints.get(j);
+                }
+            }
+        }
 
         return result;
     }
@@ -292,7 +365,4 @@ public class Main {
             System.out.println("No dupes found!");
         }
     }
-
-
-
 }
