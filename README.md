@@ -4,7 +4,9 @@ A work by: Tyler Watson
 For this extra credit assignment, I decided to implement a divide and conquer algorithm which find a closest pair of points. To help demonstrate the importance and effectiveness of divide and conquer algorithms, I decided to create two implementations which can solve the closest pair of points problem: a brute force method and another using an efficient algorithm implementation. 
 
 **Description**
-For this project, I decided to use java to implement these two solutions. For this project
+For this project, I decided to use java to implement these two solutions to the closest pair of points problem. This problem is where you try and find the two points in a large data set of points that are the closests to each other. For instance, this problem can be applicable if you have a map with a hundreds of points which we will consider to be the location of a person within a city. In this situation, if you would want to find the two people in the city that are the closest distance to eachother then this is the type of problem you will end up needing to solve.
+
+For implementing a solution to this problem, I took two approaches: a brute force approach and an efficient polytime approach (by utilizing my understanding of algorithms). The reason for picking these two approaches was to allow for good comparisons when it came to runtime and show the massive impact your algorithm can have when it comes to the runtime of a specific solution. For an analysis on the results and a breakdown of my implementation, make sure to checkout the final section in this readme titled 'Reflection'.
 
 **Requirements**
 You will need to be able to run a java program which utilizes java 1.8 if you choose to run the jar file. If you wish to compile and run by command line, then any current java version should work.
