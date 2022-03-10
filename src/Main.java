@@ -1,5 +1,5 @@
 //Authored by Tyler Watson
-//Algorithms Extracredit Assignment
+//Algorithms Extra Credit Assignment
 //3-10-2022
 
 import java.awt.*;
@@ -19,8 +19,8 @@ public class Main {
         System.out.println("Enter name of data file (Test file is called \"input.txt\"): ");
 
         //Declare variables
-        String fileName = "";
-        ArrayList<Point> points = null;
+        String fileName;
+        ArrayList<Point> points;
 
         //Loop until the user gives a good file to read
 
@@ -49,23 +49,29 @@ public class Main {
         Point[] BruteForcePair = BruteForceClosestPair(points);
         long finishTimeBruteForce = System.nanoTime();
 
-        System.out.println("Closest point via brute force method:");
-        System.out.println("(" + BruteForcePair[0].getX() + "," + BruteForcePair[0].getY() + ") & " + "(" + BruteForcePair[1].getX() + "," + BruteForcePair[1].getY() + ")");
+        System.out.print("");
+        System.out.println("======================================================");
+        System.out.println("Brute force algorithm results:");
+        System.out.println("Two closest pairs: (" + BruteForcePair[0].getX() + "," + BruteForcePair[0].getY() + ") & " + "(" + BruteForcePair[1].getX() + "," + BruteForcePair[1].getY() + ")");
+        System.out.println("Distance between the two points was: " + CalculateDistance(BruteForcePair[0], BruteForcePair[1]));
         System.out.println("Brute force method took a total of: " + (finishTimeBruteForce-startTimeBruteForce) + " nanoseconds");
+        System.out.println("======================================================");
+        System.out.print("");
 
-
-        //TODO: pass the list of points into the find closest point algorithm method
         //Sort input by x coordinate via mergesort - has a time complexity of O(nlogn)
         ArrayList<Point> sortedList = MergeSort(points, true);
 
         //Finds the closest pair via the closet pair divide and conquer algorithm implementation - has a time complexity of O(nlogn)
-        long startTimeEfficentAlgorithm = System.nanoTime();
-        Point[] EfficentAlgorithmPair = EfficientClosestPair(sortedList);
-        long finishTimeEfficentAlgorithm = System.nanoTime();
+        long startTimeEfficientAlgorithm = System.nanoTime();
+        Point[] EfficientAlgorithmPair = EfficientClosestPair(sortedList);
+        long finishTimeEfficientAlgorithm = System.nanoTime();
 
+        System.out.println("======================================================");
         System.out.println("Efficient closest pair of points algorithm result:");
-        System.out.println("(" + EfficentAlgorithmPair[0].getX() + "," + EfficentAlgorithmPair[0].getY() + ") & " + "(" + EfficentAlgorithmPair[1].getX() + "," + EfficentAlgorithmPair[1].getY() + ")");
-        System.out.println("Efficient closest pair of points algorithm method took a total of: " + (finishTimeEfficentAlgorithm-startTimeEfficentAlgorithm) + " nanoseconds");
+        System.out.println("Two closest pairs: (" + EfficientAlgorithmPair[0].getX() + "," + EfficientAlgorithmPair[0].getY() + ") & " + "(" + EfficientAlgorithmPair[1].getX() + "," + EfficientAlgorithmPair[1].getY() + ")");
+        System.out.println("Distance between the two points was: " + CalculateDistance(EfficientAlgorithmPair[0], EfficientAlgorithmPair[1]));
+        System.out.println("Efficient closest pair of points algorithm method took a total of: " + (finishTimeEfficientAlgorithm-startTimeEfficientAlgorithm) + " nanoseconds");
+        System.out.println("======================================================");
     }
 
     //Purpose: This method takes in an arraylist of points and then runs an efficient closest pair algorithm to get the closest pair out of a set of points
@@ -75,25 +81,20 @@ public class Main {
 
         //Base case
         if (points.size() <= 3) {
-            /*
-            System.out.println("debug");
-            for(int i = 0; i < points.size(); i++) {
-                System.out.println(points.get(i).toString());
-            }*/
             result[0] = points.get(0);
             result[1] = points.get(1);
             return result;
         }
 
-        //We can just divide by the midpoint since the points are already presorted by x cordinate
+        //We can just divide by the midpoint since the points are already presorted by x Coordinate
         int midIndex = points.size()/2;
 
-        ArrayList<Point> leftHalf = new ArrayList<Point>();
+        ArrayList<Point> leftHalf = new ArrayList<>();
         for(int i = 0; i < midIndex; i++) {
             leftHalf.add(points.get(i));
         }
 
-        ArrayList<Point> rightHalf = new ArrayList<Point>();
+        ArrayList<Point> rightHalf = new ArrayList<>();
         for(int i = midIndex; i < points.size(); i++) {
             rightHalf.add(points.get(i));
         }
@@ -102,11 +103,17 @@ public class Main {
         Point[] closestPairRightHalf = EfficientClosestPair(rightHalf);
 
         //Calculate the minimum distance between the two closest points on each half
-        double min = -1;
-        if (CalculateDistance(closestPairLeftHalf[0],closestPairLeftHalf[1]) < CalculateDistance(closestPairRightHalf[0], closestPairRightHalf[1])) {
-            min = CalculateDistance(closestPairLeftHalf[0],closestPairLeftHalf[1]);
+        double min;
+        double leftDistanceCalc = CalculateDistance(closestPairLeftHalf[0],closestPairLeftHalf[1]);
+        double rightDistanceCalc = CalculateDistance(closestPairRightHalf[0], closestPairRightHalf[1]);
+        if (leftDistanceCalc < rightDistanceCalc) {
+            min = leftDistanceCalc;
+            result[0] = closestPairLeftHalf[0];
+            result[1] = closestPairLeftHalf[1];
         } else {
-            min = CalculateDistance(closestPairRightHalf[0], closestPairRightHalf[1]);
+            min = rightDistanceCalc;
+            result[0] = closestPairRightHalf[0];
+            result[1] = closestPairRightHalf[1];
         }
 
         //Calculate the region around the line of separation
@@ -125,12 +132,11 @@ public class Main {
         ArrayList<Point> yValueSortedPoints = MergeSort(points, false);
 
         //Scan closest 11 points to find the min and check if the min across the line of separation
-        double localMin = 1000000;
         for (int i = 0; i < yValueSortedPoints.size(); i++) {
 
             //Check if the upper bounds hits the last point
             //Since we begin by checking the closest 11 positions from the very bottom, we only need to check the closest 11 positions above the current point
-            int upperBounds = -1;
+            int upperBounds;
             if(i+11 < yValueSortedPoints.size()) {
                 upperBounds = i+11;
             } else {
@@ -139,8 +145,9 @@ public class Main {
 
             for (int j = i+1; j < upperBounds; j++) {
                 double localDistance = CalculateDistance(yValueSortedPoints.get(i), yValueSortedPoints.get(j));
-                if (localDistance < localMin) {
-                    localMin = localDistance;
+
+                if (localDistance < min) {
+                    min = localDistance;
                     result[0] = yValueSortedPoints.get(i);
                     result[1] = yValueSortedPoints.get(j);
                 }
@@ -170,7 +177,6 @@ public class Main {
                 }
             }
         }
-        System.out.println("Min distance found was: " + minDistance + " unit(s)");
         return result;
     }
 
@@ -206,12 +212,12 @@ public class Main {
         int midPoint = points.size()/2;
 
         //Get a list of points to the right and left of the midpoint
-        ArrayList<Point> leftOfMidPoint = new ArrayList<Point>();
+        ArrayList<Point> leftOfMidPoint = new ArrayList<>();
         for (int i = 0; i < midPoint; i++) {
             leftOfMidPoint.add(points.get(i));
         }
 
-        ArrayList<Point> rightOfMidPoint = new ArrayList<Point>();
+        ArrayList<Point> rightOfMidPoint = new ArrayList<>();
         for (int i = midPoint; i < points.size(); i++) {
             rightOfMidPoint.add(points.get(i));
         }
@@ -295,7 +301,7 @@ public class Main {
     //Purpose: Handles file reading by taking in a filename and then parsing the file to get a list of points
     //Returns: This function returns null if the read is unsuccessful and it will return a list of points if it is successful
     private static ArrayList<Point> FileRead(String fileName) {
-        ArrayList<Point> points = new ArrayList<Point>();
+        ArrayList<Point> points = new ArrayList<>();
 
         //First get all the data from the file
         try {
@@ -335,7 +341,8 @@ public class Main {
         return points;
     }
 
-    //TODO Remove later, just a function to quickly get 100 random points
+    //Purpose: this function was used to generate a list of 100 points and it detects whether there are any duplicate points in the set
+    //Note: this isn't actively used in the program, but it simply helped automate my ability to get the input for the program
     private static void printPoints(){
         Point[] points = new Point[100];
 
@@ -359,7 +366,7 @@ public class Main {
             }
         }
 
-        if (noDupes == false) {
+        if (!noDupes) {
             System.out.println("Dupes found!");
         } else {
             System.out.println("No dupes found!");
