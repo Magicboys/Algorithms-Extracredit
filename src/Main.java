@@ -57,6 +57,15 @@ public class Main {
 
         //TODO: pass the list of points into the find closest point algorithm method
 
+        long startTimeBruteForce = System.nanoTime();
+        Point[] BruteForcePair = BruteForceClosestPair(points);
+        long finishTimeBruteForce = System.nanoTime();
+
+        System.out.println("Closest point via brute force method:");
+        System.out.println("(" + BruteForcePair[0].getX() + "," + BruteForcePair[0].getY() + ") & " + "(" + BruteForcePair[1].getX() + "," + BruteForcePair[1].getY() + ")");
+        System.out.println("Brute force method took a total of: " + (finishTimeBruteForce-startTimeBruteForce) + " nanoseconds");
+
+
         //TODO: time brute force and efficient method and output the comparison
     }
 
@@ -71,9 +80,41 @@ public class Main {
     //Purpose: This method takes in an arraylist of points and then runs a brute force closest pair algorithm to get the closest pair out of a set of points
     //Returns: provides the two points which are the closest to each other out of the whole set
     private static Point[] BruteForceClosestPair(ArrayList<Point> points) {
-        Point result[] = null;
+        Point result[] = new Point[2];
 
+        double minDistance = 10000000;
+
+        //Brute force method of looping through all point combinations to find the min value
+        for (int i = 0; i < points.size(); i++) {
+            for (int j = 0; j < points.size(); j++) {
+                if (i != j) {
+                    double localDistance = CalculateDistance(points.get(i), points.get(j));
+                    if (localDistance < minDistance) {
+                        minDistance = localDistance;
+                        result[0] = points.get(i);
+                        result[1] = points.get(j);
+                    }
+                }
+            }
+        }
+        System.out.println("Min distance found was: " + minDistance + " unit(s)");
         return result;
+    }
+
+    //Purpose: calculates the distance between two points
+    //Returns: gives a double value which is the calculated distance between the two points
+    private static double CalculateDistance(Point one, Point two) {
+
+        double xOne = one.getX();
+        double xTwo= two.getX();
+        double yOne = one.getY();
+        double yTwo = two.getY();
+
+        double xDistance = Math.pow(xOne-xTwo,2.0);
+        double yDistance = Math.pow(yOne-yTwo,2.0);
+
+        return Math.sqrt((xDistance + yDistance));
+
     }
 
     //Purpose: runs a merge sort algorithm
