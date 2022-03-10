@@ -77,23 +77,37 @@ public class Main {
         //Now run each method ten times to get a good average comparison for both
         System.out.println("===================[Statistics]=============================");
 
+        //Find brute force average
         long bruteForceSum = 0;
-        for (int i = 0; i < 10; i++) {
+        long[] bruteForceValues = new long[10];
+        for (int i = 0; i < 4; i++) {
             long localTimeStart = System.nanoTime();
             BruteForceClosestPair(points);
             long localFinishTime = System.nanoTime();
-            bruteForceSum += (localFinishTime-localTimeStart);
+            bruteForceValues[i] = (localFinishTime-localTimeStart);
         }
-        long bruteForceAverage = bruteForceSum/10;
 
+        for (int i = 0; i < 4; i++) {
+            bruteForceSum += bruteForceValues[i];
+        }
+
+        long bruteForceAverage = bruteForceSum/4;
+
+        //Find efficient implementation average
+        long[] efficientValues = new long[10];
         long efficientSum = 0;
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 4; i++) {
             long localTimeStart = System.nanoTime();
             EfficientClosestPair(points);
             long localFinishTime = System.nanoTime();
-            efficientSum += (localFinishTime-localTimeStart);
+            efficientValues[i] += (localFinishTime-localTimeStart);
         }
-        long efficientAverage = efficientSum/10;
+
+        for (int i = 0; i < 4; i++) {
+            efficientSum += efficientValues[i];
+        }
+
+        long efficientAverage = efficientSum/4;
 
         System.out.println("Out of ten iterations of each method, the following are the average run times:");
         System.out.println("Average Brute Force Runtime: " + bruteForceAverage + " milliseconds.");
