@@ -109,9 +109,9 @@ public class Main {
 
         long efficientAverage = efficientSum/4;
 
-        System.out.println("Out of ten iterations of each method, the following are the average run times:");
-        System.out.println("Average Brute Force Runtime: " + bruteForceAverage + " milliseconds.");
-        System.out.println("Average Efficient Implementation Runtime: " + efficientAverage + " milliseconds.");
+        System.out.println("Out of four iterations of each method, the following are the average run times:");
+        System.out.println("Average Brute Force Runtime: " + bruteForceAverage + " nanoseconds.");
+        System.out.println("Average Efficient Implementation Runtime: " + efficientAverage + " nanoseconds.");
         System.out.println("On average the efficient solution was approximately " + (bruteForceAverage/efficientAverage)*100 + "% better then the brute force alternative");
         System.out.println("============================================================");
     }
