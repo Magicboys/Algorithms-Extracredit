@@ -13,7 +13,7 @@ Video Demonstration: https://youtu.be/Vpg_nVb019s
 
 **Requirements**
 
-You will need to be able to run a java program which utilizes java 1.8 if you choose to run the jar file. If you wish to compile and run by command line, then any current java version should work.
+You will need to be able to run a java jar program which utilizes is built with OpenJDK 17.0.1, so it is important to make sure your system is compatible with this version of java. 
 
 **User Manual**
 
