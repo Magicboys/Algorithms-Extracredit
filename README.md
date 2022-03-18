@@ -13,7 +13,7 @@ Video Demonstration: https://youtu.be/Vpg_nVb019s
 
 **Requirements**
 
-You will need to be able to run a java jar program which utilizes is built with OpenJDK 17.0.1, so it is important to make sure your system is compatible with this version of java. 
+You will need to be able to run a java jar program which utilizes is built with JDK version 1.8, so it is important to make sure your system is compatible with this version of java. 
 
 **User Manual**
 
