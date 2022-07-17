@@ -1,5 +1,4 @@
-# Algorithms-Extracredit
-A work by: Tyler Watson
+# Closest pair of points algorithm implementation
 
 For this extra credit assignment, I decided to implement a divide and conquer algorithm which find a closest pair of points. To help demonstrate the importance and effectiveness of divide and conquer algorithms, I decided to create two implementations which can solve the closest pair of points problem: a brute force method and another using an efficient algorithm implementation. 
 
